@@ -22,10 +22,10 @@ public class EmployeeService {
 
     public EmployeeDto createEmployee(EmployeeDto employeeDto){
         // first check if this email already exist or not
-        Optional<Employee> existingEmployee= employeeRepository.findByEmail(employeeDto.getEmail());
-        if(existingEmployee.isPresent()){
-            throw new EmailAlreadyExistException("This email already exist in the database");
-        }
+//        Optional<Employee> existingEmployee= employeeRepository.findByEmail(employeeDto.getEmail());
+//        if(existingEmployee.isPresent()){
+//            throw new EmailAlreadyExistException("This email already exist in the database");
+//        }
 
         // convert employeeDto into employee JPA entity
         Employee employee= EmployeeMapper.mapToEmployee(employeeDto);
@@ -36,6 +36,8 @@ public class EmployeeService {
         return savedEmployeeDto;
 
     }
+
+
 
     public EmployeeDto getEmployee(Long id){
         // findById returns an optional -> get() method converts optional into employee object
