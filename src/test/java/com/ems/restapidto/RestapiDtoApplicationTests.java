@@ -2,6 +2,7 @@ package com.ems.restapidto;
 
 import com.ems.restapidto.dto.EmployeeDto;
 import com.ems.restapidto.entity.Employee;
+import com.ems.restapidto.exception.EmailAlreadyExistException;
 import com.ems.restapidto.mapper.EmployeeMapper;
 import com.ems.restapidto.repository.EmployeeRepository;
 import com.ems.restapidto.service.EmployeeService;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -84,7 +86,7 @@ class RestapiDtoApplicationTests {
 //	}
 
 	@Test
-	public void testUpdateEmployee(){
+	public void test_updateEmployee(){
 		Employee employee =new Employee(1L,"sourabh","sourabh123@gmail.com");
 
 
@@ -99,7 +101,12 @@ class RestapiDtoApplicationTests {
 	}
 
 	@Test
-	public void testCreateEmployeeSucess(){
+	public void test_createEmployeeSucess(){
+
+//		test is passing because, during the execution of createEmployee, the findByEmail
+//		method is returning an empty Optional<Employee>. Therefore, the createEmployee method
+//		successfully proceeds to save the new employee without throwing the
+//		EmailAlreadyExistException.
 
 		Employee employee =new Employee();
 		employee.setName("sourabh");
@@ -118,6 +125,29 @@ class RestapiDtoApplicationTests {
 	}
 
 
+	@Test
+	public void test_createEmployeeEmailAlreadyExists() {
+		// Mocking an existing employee with the same email
+		Employee existingEmployee = new Employee();
+		existingEmployee.setName("John");
+		existingEmployee.setEmail("sourabh123@gmail.com");
+
+		when(employeeRepository.findByEmail(anyString())).thenReturn(Optional.of(existingEmployee));
+
+		// Creating a new employee with the same email
+		EmployeeDto employeeDto = new EmployeeDto();
+		employeeDto.setName("Sourabh");
+		employeeDto.setEmail("sourabh123@gmail.com");
+
+		// Verifying that EmailAlreadyExistException is thrown
+
+//		The assertThrows method in Java is used to verify that a specific exception is
+//		thrown when executing a piece of code
+
+		assertThrows(EmailAlreadyExistException.class, () -> {
+			employeeService.createEmployee(employeeDto);
+		});
+	}
 
 
 
