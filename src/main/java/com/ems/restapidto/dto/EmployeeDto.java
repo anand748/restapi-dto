@@ -1,6 +1,7 @@
 package com.ems.restapidto.dto;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -8,14 +9,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Schema(
+        description = "EmployeeDTO modal information"
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDto {
     Long id;
+
+    @Schema(
+            description = "Employee full name"
+    )
     @NotEmpty(message = "name should not be empty")
     String name;
+
+    @Schema(
+            description = "Employee email id"
+    )
     @NotEmpty(message = "email should not be empty")
     @Email(message = "email should be valid")
     String email;
